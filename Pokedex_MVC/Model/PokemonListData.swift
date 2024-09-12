@@ -10,10 +10,10 @@ import Foundation
 struct PokemonListData: Decodable {
     let next: String?
     let previous: String?
-    let results: [ResultsPokemonList]
+    let results: [PokemonInTheList]
 }
 
-struct ResultsPokemonList: Decodable{
+struct PokemonInTheList: Decodable{
     let name: String
     let url: String
 }

@@ -46,7 +46,7 @@ struct PokemonListManager{
         let decoder = JSONDecoder()
         do{
             let decodeData = try decoder.decode(PokemonListData.self, from: pokemonDataAPI)
-            print(decodeData.previous)
+            print(decodeData.results[0].name)
         } catch{
             print(error)
         }
