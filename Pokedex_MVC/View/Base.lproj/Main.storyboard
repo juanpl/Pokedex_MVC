@@ -59,10 +59,10 @@
             </objects>
             <point key="canvasLocation" x="1057.2519083969464" y="-27.464788732394368"/>
         </scene>
-        <!--View Controller-->
+        <!--Pokemon List View Controller-->
         <scene sceneID="yYh-Kd-dYd">
             <objects>
-                <viewController id="JyP-x6-DBK" sceneMemberID="viewController">
+                <viewController id="JyP-x6-DBK" customClass="PokemonListViewController" customModule="Pokedex_MVC" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BuB-Sv-Tir">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
