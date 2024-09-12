@@ -8,11 +8,13 @@
 import UIKit
 
 class PokemonListViewController: UIViewController {
+    
+    var pokemonListManager = PokemonListManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        pokemonListManager.fetchPokemonList(limit: 3, offset: 0)
     }
     
 
