@@ -12,7 +12,38 @@ struct PokemonListManager{
     
     func fetchPokemonList(limit: Int, offset: Int){
         let urlString = "\(pokeAPI_URL)/pokemon/?limit=\(limit)&offset=\(offset)"
-        print(urlString)
+        performRequest(urlString: urlString)
+    }
+    
+    func performRequest(urlString: String){
+        //1.Create a URL
+        
+        if let url = URL(string: urlString){
+            
+            //2.Create a URLSession
+            let session = URLSession(configuration: .default)
+            
+            //3.Give the session task
+            let task = session.dataTask(with: url){ (data, reponse, error) in
+                if error != nil{
+                    print(error!)
+                    return
+                }
+                
+                if let safeData = data{
+                    self.parseJSON(pokemonDataAPI: safeData)
+                }
+            }
+            
+            //4.Start task
+            task.resume()
+            
+        }
+        
+    }
+    
+    func parseJSON(pokemonDataAPI: Data){
+        
     }
     
 }
