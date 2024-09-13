@@ -17,6 +17,8 @@ class PokemonListViewController: UIViewController {
         pokemonListManager.fetchPokemonList(limit: 3, offset: 0)
     }
     
+    
+    
 
     /*
     // MARK: - Navigation
