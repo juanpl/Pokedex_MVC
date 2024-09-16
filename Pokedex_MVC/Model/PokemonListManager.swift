@@ -7,17 +7,23 @@
 
 import Foundation
 
+protocol  PokemonListManagerDelegate{
+    func didUpdatePokemonList(_ pokemonListManager: PokemonListManager,pokemonList: [PokemonOnListModel])
+    func didFailWithError(error: Error)
+}
+
 struct PokemonListManager{
     let pokeAPI_URL = K.PokeAPI.URL
     
+    var delegate: PokemonListManagerDelegate?
+    
     func fetchPokemonList(limit: Int, offset: Int){
         let urlString = "\(pokeAPI_URL)/pokemon/?limit=\(limit)&offset=\(offset)"
-        performRequest(urlString: urlString)
+        performRequest(with: urlString, offset: offset)
     }
     
-    func performRequest(urlString: String){
+    func performRequest(with urlString: String, offset: Int){
         //1.Create a URL
-        
         if let url = URL(string: urlString){
             
             //2.Create a URLSession
@@ -26,12 +32,14 @@ struct PokemonListManager{
             //3.Give the session task
             let task = session.dataTask(with: url){ (data, reponse, error) in
                 if error != nil{
-                    print(error!)
+                    delegate?.didFailWithError(error: error!)
                     return
                 }
                 
                 if let safeData = data{
-                    self.parseJSON(pokemonDataAPI: safeData)
+                    if let pokemonList = self.parseJSON(safeData, offset: offset){
+                        delegate?.didUpdatePokemonList(self, pokemonList: pokemonList)
+                    }
                 }
             }
             
@@ -42,13 +50,25 @@ struct PokemonListManager{
         
     }
     
-    func parseJSON(pokemonDataAPI: Data){
+    func parseJSON(_ pokemonDataAPI: Data, offset: Int) -> [PokemonOnListModel]? {
         let decoder = JSONDecoder()
         do{
             let decodeData = try decoder.decode(PokemonListData.self, from: pokemonDataAPI)
-            print(decodeData.results[0].name)
+            var pokemonList: [PokemonOnListModel] = []
+            
+            for (index,pokemon) in decodeData.results.enumerated() {
+                let id = index + 1 + offset //You must add one because the list of Pokemon starts at number 1 and also adds the offset
+                let name = pokemon.name
+                
+                let pokemonOnList = PokemonOnListModel(id: id, name: name)
+                pokemonList.append(pokemonOnList)
+            }
+            
+            return pokemonList
+            
         } catch{
-            print(error)
+            delegate?.didFailWithError(error: error)
+            return nil
         }
         
     }
