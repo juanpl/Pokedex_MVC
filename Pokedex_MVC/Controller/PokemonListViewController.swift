@@ -7,18 +7,25 @@
 
 import UIKit
 
-class PokemonListViewController: UIViewController {
+class PokemonListViewController: UIViewController, PokemonListManagerDelegate {
+
     
     var pokemonListManager = PokemonListManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        pokemonListManager.delegate = self
         pokemonListManager.fetchPokemonList(limit: 3, offset: 0)
     }
     
+    func didUpdatePokemonList(_ pokemonListManager: PokemonListManager, pokemonList: [PokemonOnListModel]) {
+        print(pokemonList[0].name)
+    }
     
     
+    func didFailWithError(error: Error) {
+        print(error)
+    }
 
     /*
     // MARK: - Navigation

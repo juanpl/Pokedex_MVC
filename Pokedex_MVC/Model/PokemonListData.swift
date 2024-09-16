@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct PokemonListData: Decodable {
+struct PokemonListData: Codable {
     let next: String?
     let previous: String?
     let results: [PokemonInTheList]
 }
 
-struct PokemonInTheList: Decodable{
+struct PokemonInTheList: Codable{
     let name: String
     let url: String
 }

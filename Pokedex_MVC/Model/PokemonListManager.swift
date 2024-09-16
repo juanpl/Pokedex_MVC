@@ -7,15 +7,22 @@
 
 import Foundation
 
+protocol  PokemonListManagerDelegate{
+    func didUpdatePokemonList(_ pokemonListManager: PokemonListManager,pokemonList: [PokemonOnListModel])
+    func didFailWithError(error: Error)
+}
+
 struct PokemonListManager{
     let pokeAPI_URL = K.PokeAPI.URL
     
+    var delegate: PokemonListManagerDelegate?
+    
     func fetchPokemonList(limit: Int, offset: Int){
         let urlString = "\(pokeAPI_URL)/pokemon/?limit=\(limit)&offset=\(offset)"
-        performRequest(urlString: urlString, offset: offset)
+        performRequest(with: urlString, offset: offset)
     }
     
-    func performRequest(urlString: String, offset: Int){
+    func performRequest(with urlString: String, offset: Int){
         //1.Create a URL
         if let url = URL(string: urlString){
             
@@ -25,12 +32,14 @@ struct PokemonListManager{
             //3.Give the session task
             let task = session.dataTask(with: url){ (data, reponse, error) in
                 if error != nil{
-                    print(error!)
+                    delegate?.didFailWithError(error: error!)
                     return
                 }
                 
                 if let safeData = data{
-                    self.parseJSON(pokemonDataAPI: safeData, offset: offset)
+                    if let pokemonList = self.parseJSON(safeData, offset: offset){
+                        delegate?.didUpdatePokemonList(self, pokemonList: pokemonList)
+                    }
                 }
             }
             
@@ -41,11 +50,10 @@ struct PokemonListManager{
         
     }
     
-    func parseJSON(pokemonDataAPI: Data, offset: Int){
+    func parseJSON(_ pokemonDataAPI: Data, offset: Int) -> [PokemonOnListModel]? {
         let decoder = JSONDecoder()
         do{
             let decodeData = try decoder.decode(PokemonListData.self, from: pokemonDataAPI)
-            print(decodeData.results[0].name)
             var pokemonList: [PokemonOnListModel] = []
             
             for (index,pokemon) in decodeData.results.enumerated() {
@@ -56,8 +64,11 @@ struct PokemonListManager{
                 pokemonList.append(pokemonOnList)
             }
             
+            return pokemonList
+            
         } catch{
-            print(error)
+            delegate?.didFailWithError(error: error)
+            return nil
         }
         
     }
