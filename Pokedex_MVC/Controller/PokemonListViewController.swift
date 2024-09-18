@@ -7,8 +7,9 @@
 
 import UIKit
 
-class PokemonListViewController: UIViewController, PokemonListManagerDelegate, PokemonImageProviderDelegate {
+class PokemonListViewController: UIViewController {
 
+    
     @IBOutlet weak var pokemonImage: UIImageView!
     @IBOutlet weak var pokemonName: UILabel!
     
@@ -26,20 +27,30 @@ class PokemonListViewController: UIViewController, PokemonListManagerDelegate, P
         print(PokemonList.count)
     }
     
+}
+
+//MARK: - PokemonListManagerDelegate
+
+extension PokemonListViewController: PokemonListManagerDelegate {
+    
     func didUpdatePokemonList(_ pokemonListManager: PokemonListManager, pokemonList: [PokemonOnListModel]) {
         DispatchQueue.main.async {
-
             self.pokemonName.text = pokemonList[0].name
             self.pokemonImageManager.fetchImage(from: pokemonList[0].sprite)
             
         }
     }
     
-    
     func didFailWithError(error: Error) {
         print(error)
     }
     
+}
+
+
+//MARK: - PokemonImageProviderDelegate
+
+extension PokemonListViewController: PokemonImageProviderDelegate {
     func didReceiveImage(_ data: Data) {
         DispatchQueue.main.async {
             let image = UIImage(data: data)!
@@ -50,15 +61,6 @@ class PokemonListViewController: UIViewController, PokemonListManagerDelegate, P
     func didFailToLoadImage(error: Error) {
         print(error)
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
+
+
