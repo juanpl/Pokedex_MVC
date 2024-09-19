@@ -35,7 +35,7 @@ extension PokemonListViewController: PokemonListManagerDelegate {
     
     func didUpdatePokemonList(_ pokemonListManager: PokemonListManager, pokemonList: [PokemonOnListModel]) {
         DispatchQueue.main.async {
-            self.pokemonName.text = pokemonList[0].name
+            //self.pokemonName.text = pokemonList[0].name
             self.pokemonImageManager.fetchImage(from: pokemonList[0].sprite)
             
         }
@@ -54,7 +54,7 @@ extension PokemonListViewController: PokemonImageProviderDelegate {
     func didReceiveImage(_ data: Data) {
         DispatchQueue.main.async {
             let image = UIImage(data: data)!
-            self.pokemonImage.image = image
+            //self.pokemonImage.image = image
         }
     }
     
