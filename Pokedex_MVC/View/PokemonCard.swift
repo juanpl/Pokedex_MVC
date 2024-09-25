@@ -7,21 +7,27 @@
 
 import UIKit
 
-class PokemonCard: UITableViewCell {
+protocol PokemonCardDelegate{
+    func fetchImageCard(pokemon: PokemonOnListModel)
+}
 
-    @IBOutlet weak var pokemonImageView: UIImageView!
-    @IBOutlet weak var pokemonNameLabel: UILabel!
+class PokemonCard: UITableViewCell{
+
+    @IBOutlet private weak var pokemonImageView: UIImageView!
+    @IBOutlet private weak var pokemonNameLabel: UILabel!
+    
+    var delegate: PokemonCardDelegate?
     
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    func setup(_ pokemon: PokemonOnListModel) {
+        pokemonNameLabel.text = pokemon.name
+        if let data = pokemon.data {
+            pokemonImageView.image = UIImage(data: data)
+        } else{
+            delegate?.fetchImageCard(pokemon: pokemon)
+        }
     }
     
 }
+
+

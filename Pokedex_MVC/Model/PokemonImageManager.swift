@@ -9,7 +9,7 @@ import Foundation
 
 protocol PokemonImageProviderDelegate: AnyObject {
     // Método que se llama cuando la imagen es descargada exitosamente
-    func didReceiveImage(_ data: Data)
+    func didReceiveImage(_ data: Data, pokemon: PokemonOnListModel)
     
     // Método que se llama si ocurre un error durante la descarga de la imagen
     func didFailToLoadImage(error: Error)
@@ -21,7 +21,7 @@ struct PokemonImageManager {
     weak var delegate: PokemonImageProviderDelegate?
 
     // Método para descargar la imagen desde una URL
-    func fetchImage(from urlString: String) {
+    func fetchImage(from urlString: String, pokemon: PokemonOnListModel) {
         // Verificar si la URL es válida
         guard let url = URL(string: urlString) else {
             print("URL inválida")
@@ -48,7 +48,7 @@ struct PokemonImageManager {
             
             // Notificar al delegate que la imagen fue recibida exitosamente
             DispatchQueue.main.async {
-                delegate?.didReceiveImage(data)
+                delegate?.didReceiveImage(data, pokemon: pokemon)
             }
         }.resume()
     }
