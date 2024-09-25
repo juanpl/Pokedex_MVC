@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol  PokemonListManagerDelegate{
+protocol  PokemonListManagerDelegate {
     func didUpdatePokemonList(_ pokemonListManager: PokemonListManager,pokemonList: [PokemonOnListModel])
     func didFailWithError(error: Error)
 }
@@ -21,6 +21,7 @@ struct PokemonListManager{
         let urlString = "\(pokeAPI_URL)/pokemon/?limit=\(limit)&offset=\(offset)"
         performRequest(with: urlString, offset: offset)
     }
+    
     
     func performRequest(with urlString: String, offset: Int){
         //1.Create a URL
@@ -52,6 +53,7 @@ struct PokemonListManager{
     
     func parseJSON(_ pokemonDataAPI: Data, offset: Int) -> [PokemonOnListModel]? {
         let decoder = JSONDecoder()
+        
         do{
             let decodeData = try decoder.decode(PokemonListData.self, from: pokemonDataAPI)
             var pokemonList: [PokemonOnListModel] = []

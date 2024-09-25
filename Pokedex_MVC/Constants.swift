@@ -8,7 +8,8 @@
 import Foundation
 
 struct K {
-    
+    static let cellIdentifier = "ReusableCell"
+    static let cellNibName = "PokemonCard"
     struct PokeAPI {
         static let URL = "https://pokeapi.co/api/v2"
     }
