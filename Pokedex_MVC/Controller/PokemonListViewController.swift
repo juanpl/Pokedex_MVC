@@ -19,11 +19,13 @@ class PokemonListViewController: UIViewController{
     var pokemonImageManager = PokemonImageManager()
     var pokemonSearchManager = PokemonSearchManager()
     
+    var selectedItemId: Int?
+    
     var pokemonListVar: [PokemonOnListModel] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        //tableView.delegate = self
+        tableView.delegate = self
         pokemonListManager.delegate = self
         pokemonImageManager.delegate = self
         pokemonSearchManager.delegate = self
@@ -37,6 +39,13 @@ class PokemonListViewController: UIViewController{
         
         pokemonListManager.fetchPokemonList(limit: 1025, offset: 0)
         
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToPokemonView" {
+            let destinationVC = segue.destination as! PokemonViewController
+            destinationVC.pokemonId = selectedItemId
+        }
     }
     
 }
@@ -91,11 +100,24 @@ extension PokemonListViewController: UITableViewDataSource {
     }
 }
 
+
 //MARK: - PokemonCardDelegate
 extension PokemonListViewController: PokemonCardDelegate{
     func fetchImageCard(pokemon: PokemonOnListModel) {
         pokemonImageManager.fetchImage(from: pokemon.sprite, pokemon: pokemon)
     }
+}
+
+// MARK: - UITableViewDelegate
+
+extension PokemonListViewController: UITableViewDelegate {
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedItemId = pokemonListVar[indexPath.row].id
+        self.performSegue(withIdentifier: K.segueToPokemonView, sender: self)
+    }
+    
 }
 
 
@@ -166,18 +188,6 @@ extension PokemonListViewController: PokemonSearchManagerDelegate {
     
 }
 
-
-
-/*
  
- Use this delegate when you want to perform an action when clicking on a list item.
- 
-// MARK: - UITableViewDelegate
 
-extension PokemonListViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath.row)
-    }
-}
- */
 
