@@ -48,6 +48,7 @@ struct PokemonImageManager {
             
             // Notificar al delegate que la imagen fue recibida exitosamente
             DispatchQueue.main.async {
+                
                 delegate?.didReceiveImage(data, pokemon: pokemon)
             }
         }.resume()
